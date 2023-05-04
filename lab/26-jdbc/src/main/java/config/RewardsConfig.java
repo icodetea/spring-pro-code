@@ -1,11 +1,9 @@
 package config;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import org.springframework.jdbc.core.JdbcTemplate;
 import rewards.RewardNetwork;
 import rewards.internal.RewardNetworkImpl;
 import rewards.internal.account.AccountRepository;
@@ -15,35 +13,39 @@ import rewards.internal.restaurant.RestaurantRepository;
 import rewards.internal.reward.JdbcRewardRepository;
 import rewards.internal.reward.RewardRepository;
 
+import javax.sql.DataSource;
+
 @Configuration
 public class RewardsConfig {
-
-	@Autowired
-	DataSource dataSource;
-		
+	
 	@Bean
-	public RewardNetwork rewardNetwork(){
+	public RewardNetwork rewardNetwork(JdbcTemplate jdbcTemplate) {
 		return new RewardNetworkImpl(
-			accountRepository(), 
-			restaurantRepository(), 
-			rewardRepository());
+				accountRepository(jdbcTemplate),
+				restaurantRepository(jdbcTemplate),
+				rewardRepository(jdbcTemplate));
 	}
 	
 	@Bean
-	public AccountRepository accountRepository(){
-		JdbcAccountRepository repository = new JdbcAccountRepository(dataSource);
+	public JdbcTemplate jdbcTemplate(@Autowired DataSource dataSource) {
+		return new JdbcTemplate(dataSource);
+	}
+	
+	@Bean
+	public AccountRepository accountRepository(JdbcTemplate jdbcTemplate) {
+		JdbcAccountRepository repository = new JdbcAccountRepository(jdbcTemplate);
 		return repository;
 	}
 	
 	@Bean
-	public RestaurantRepository restaurantRepository(){
-		JdbcRestaurantRepository repository = new JdbcRestaurantRepository(dataSource);
+	public RestaurantRepository restaurantRepository(JdbcTemplate jdbcTemplate) {
+		JdbcRestaurantRepository repository = new JdbcRestaurantRepository(jdbcTemplate);
 		return repository;
 	}
 	
 	@Bean
-	public RewardRepository rewardRepository(){
-		JdbcRewardRepository repository = new JdbcRewardRepository(dataSource);
+	public RewardRepository rewardRepository(JdbcTemplate jdbcTemplate) {
+		JdbcRewardRepository repository = new JdbcRewardRepository(jdbcTemplate);
 		return repository;
 	}
 	
