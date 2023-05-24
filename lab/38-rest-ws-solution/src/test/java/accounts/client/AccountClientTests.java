@@ -81,7 +81,7 @@ public class AccountClientTests {
     public void addAndDeleteBeneficiary() {
         // perform both add and delete to avoid issues with side effects
         String addUrl = BASE_URL + port + "/accounts/{accountId}/beneficiaries";
-        URI newBeneficiaryLocation = restTemplate.postForLocation(addUrl, "David", 1);
+        URI newBeneficiaryLocation = restTemplate.postForLocation(addUrl, "David", "1");
         Beneficiary newBeneficiary = restTemplate.getForObject(newBeneficiaryLocation, Beneficiary.class);
         assertEquals("David", newBeneficiary.getName());
 
