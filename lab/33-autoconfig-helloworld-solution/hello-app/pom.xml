@@ -17,7 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>io.spring.training.core-spring</groupId>
-            <artifactId>hello-starter</artifactId>
+            <artifactId>hello-lib</artifactId>
         </dependency>
     </dependencies>
     <build>
